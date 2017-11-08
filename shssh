@@ -1,0 +1,18 @@
+#!/usr/local/bin/bash
+
+__load "${BASH_SOURCE[0]}" "deps/shlogging/shlogging"
+
+function _ssh (){
+  local SCRIPT_FILE
+
+  readonly SCRIPT_FILE=$1
+
+  _assert "'${SSH_HOSTNAME}' != ''" "Require 'SSH_HOSTNAME'"
+  _assert "'${SSH_USERNAME}' != ''" "Require 'SSH_USERNAME'"
+  _assert "'${SSH_PASSWORD}' != ''" "Require 'SSH_PASSWORD'"
+  _assert "'${SCRIPT_FILE}' != ''" "Require 'SCRIPT_FILE'"
+
+  $(which sshpass) -p "${SSH_PASSWORD}" \
+    ssh -T -o StrictHostKeyChecking=no \
+    ${SSH_USERNAME}@${SSH_HOSTNAME} 'sudo -s --' < ${SCRIPT_FILE}
+}
