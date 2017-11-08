@@ -1,6 +1,6 @@
 #!/usr/local/bin/bash
 
-__load "${BASH_SOURCE[0]}" "deps/shlogging/shlogging"
+__load "${BASH_SOURCE[0]}" "shlogging"
 
 function _ssh (){
   local SCRIPT_FILE
