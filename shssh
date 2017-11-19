@@ -3,16 +3,27 @@
 __load "${BASH_SOURCE[0]}" "shlogging"
 
 function _ssh (){
-  local SCRIPT_FILE
+  local script_file ssh_host ssh_port ssh_username ssh_password
 
-  readonly SCRIPT_FILE=$1
+  readonly script_file="$1"
 
-  _assert "'${SSH_HOSTNAME}' != ''" "Require 'SSH_HOSTNAME'"
-  _assert "'${SSH_USERNAME}' != ''" "Require 'SSH_USERNAME'"
-  _assert "'${SSH_PASSWORD}' != ''" "Require 'SSH_PASSWORD'"
-  _assert "'${SCRIPT_FILE}' != ''" "Require 'SCRIPT_FILE'"
+  readonly ssh_host="${SSH_HOSTNAME:-"${SSH_HOST}"}"
+  readonly ssh_port="${SSH_HOSTPORT:-"${SSH_PORT:-"22"}"}"
+  # shellcheck disable=SC2153
+  readonly ssh_username="${SSH_USERNAME}"
 
-  $(which sshpass) -p "${SSH_PASSWORD}" \
-    ssh -T -o StrictHostKeyChecking=no \
-    ${SSH_USERNAME}@${SSH_HOSTNAME} 'sudo -s --' < ${SCRIPT_FILE}
+  # shellcheck disable=SC2153
+  readonly ssh_password="${SSH_PASSWORD}"
+
+  _assert "'${script_file}' != ''" "Require 'script_file'"
+  _assert "'${ssh_host}' != ''" "Require 'ssh_host'"
+  _assert "'${ssh_port}' != ''" "Require 'ssh_port'"
+  _assert "'${ssh_username}' != ''" "Require 'ssh_username'"
+  _assert "'${ssh_password}' != ''" "Require 'ssh_password'"
+
+  $(which sshpass) -p "${ssh_password}" \
+    ssh -T \
+    -o "StrictHostKeyChecking=no" \
+    -p "${ssh_port}"  \
+    "${ssh_username}@${ssh_host}" 'sudo -s --' < "${script_file}"
 }

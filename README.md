@@ -5,5 +5,5 @@
 This package should be used as dependencies only
 
 ```sh
-source ${SCRIPT_BASE}/deps/shssh/shssh
+__load "${BASH_SOURCE[0]}" "shssh"
 ```
